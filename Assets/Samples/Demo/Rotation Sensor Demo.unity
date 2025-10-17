@@ -1612,8 +1612,6 @@ MonoBehaviour:
         values:
         - valueKind: 0
           parameterName: 
-          inputRange: {x: 0, y: 1}
-          outputRange: {x: 0, y: 1}
 --- !u!1 &1542207671
 GameObject:
   m_ObjectHideFlags: 0
