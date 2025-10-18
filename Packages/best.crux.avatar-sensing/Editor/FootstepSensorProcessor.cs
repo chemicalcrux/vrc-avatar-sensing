@@ -7,6 +7,7 @@ using UnityEditor.Animations;
 using UnityEngine;
 using VRC.Dynamics;
 using VRC.SDK3.Avatars.Components;
+using VRC.SDK3.Avatars.ScriptableObjects;
 using VRC.SDK3.Dynamics.Constraint.Components;
 using VRC.SDK3.Dynamics.PhysBone.Components;
 using VRC.SDKBase;
@@ -21,9 +22,22 @@ namespace Crux.AvatarSensing.Editor
                 return false;
 
             var controller = new AnimatorController();
+            var paramz = ScriptableObject.CreateInstance<VRCExpressionParameters>();
 
             CreateSensors(context, data);
             AddParameters(controller, data);
+
+            paramz.parameters = new[]
+            {
+                new VRCExpressionParameters.Parameter
+                {
+                    name = "Control/Active",
+                    defaultValue = 1f,
+                    networkSynced = true,
+                    saved = false,
+                    valueType = VRCExpressionParameters.ValueType.Bool
+                }
+            };
 
             foreach (var target in data.targets)
                 controller.AddLayer(CreateEventLayer(context, data, target));
@@ -31,6 +45,7 @@ namespace Crux.AvatarSensing.Editor
             controller.AddLayer(CreateValueLayer(context, data));
 
             context.receiver.AddController(controller);
+            context.receiver.AddParameters(paramz);
 
             return true;
         }
