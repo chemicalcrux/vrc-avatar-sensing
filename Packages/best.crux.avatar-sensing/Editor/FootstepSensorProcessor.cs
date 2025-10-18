@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Crux.AvatarSensing.Runtime;
 using Crux.AvatarSensing.Runtime.Data;
@@ -23,6 +24,7 @@ namespace Crux.AvatarSensing.Editor
 
             var controller = new AnimatorController();
             var paramz = ScriptableObject.CreateInstance<VRCExpressionParameters>();
+            var hierarchy = new MenuHierarchy();
 
             CreateSensors(context, data);
             AddParameters(controller, data);
@@ -46,6 +48,22 @@ namespace Crux.AvatarSensing.Editor
 
             context.receiver.AddController(controller);
             context.receiver.AddParameters(paramz);
+
+            hierarchy.leaves.Add(new VRCExpressionsMenu.Control
+            {
+                name = "Active",
+                parameter = new VRCExpressionsMenu.Control.Parameter
+                {
+                    name = "Control/Active"
+                },
+                type = VRCExpressionsMenu.Control.ControlType.Toggle
+            });
+            
+            List<VRCExpressionsMenu> menus = new();
+            hierarchy.Resolve(paramz, data.menuPrefix, menus);
+
+            foreach (var menu in menus)
+                context.receiver.AddMenu(menu, "");
 
             return true;
         }

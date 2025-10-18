@@ -116,8 +116,8 @@ namespace Crux.AvatarSensing.Runtime.Data
 
         public string enableParameter = "Control/Active";
         
-        public string outputPrefix = "Shared/Footstep/";
-        public string identifier;
+        public string outputPrefix = "Shared/Footsteps/";
+        public string menuPrefix = "Config/Footsteps/";
         
         public VRCPhysBoneCollider floorCollider;
 

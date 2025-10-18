@@ -1591,7 +1591,7 @@ MonoBehaviour:
         standalone: 1
         enableParameter: Control/Active
         outputPrefix: Shared/Footstep/
-        identifier: 
+        menuPrefix: Config/Footsteps/
         floorCollider: {fileID: 1542207673}
         eventHoldTime: 0
         targets:
