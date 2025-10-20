@@ -10,10 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - A menu for footstep settings
+- Hysteresis for the footstep angle
+  - This prevents "flapping" by requiring the foot to go *beyond* the half-way point to trigger down/up events
 
 ### Changed
 
 - Footstep transitions now have names
+- Footstep physbones no longer collide with anything but the floor collider
+- Footstep physbones now don't point precisely downwards
+  - This makes them interact better with the floor collider
 
 ### Fixed
 

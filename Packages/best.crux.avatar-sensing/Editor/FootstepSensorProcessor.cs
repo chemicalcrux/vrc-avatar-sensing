@@ -90,16 +90,23 @@ namespace Crux.AvatarSensing.Editor
                 physbone.parameter = target.GetPhysboneParameter(data);
 
                 physbone.version = VRCPhysBoneBase.Version.Version_1_1;
+                physbone.integrationType = VRCPhysBoneBase.IntegrationType.Advanced;
 
                 physbone.pull = 1f;
                 physbone.spring = 0f;
+                physbone.stiffness = 0.3f;
+
+                physbone.allowCollision = VRCPhysBoneBase.AdvancedBool.False;
                 physbone.allowGrabbing = VRCPhysBoneBase.AdvancedBool.False;
 
                 physbone.radius = 0.03f;
 
                 physbone.colliders.Add(data.floorCollider);
 
-                physbone.endpointPosition = new Vector3(0, -0.3f, 0);
+                physbone.immobileType = VRCPhysBoneBase.ImmobileType.AllMotion;
+                physbone.immobile = 1f;
+
+                physbone.endpointPosition = new Vector3(0.001f, -0.3f, 0.001f);
                 physbone.isAnimated = true;
             }
         }
@@ -234,7 +241,7 @@ namespace Crux.AvatarSensing.Editor
                 transition.duration = 0f;
 
                 transition.AddCondition(AnimatorConditionMode.If, 0, data.enableParameter);
-                transition.AddCondition(AnimatorConditionMode.Greater, 0.5f, target.GetInputParameter(data));
+                transition.AddCondition(AnimatorConditionMode.Greater, 0.5f + data.angleHysteresis, target.GetInputParameter(data));
             }
 
             // Down -> DownHold
@@ -267,7 +274,7 @@ namespace Crux.AvatarSensing.Editor
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
-                transition.AddCondition(AnimatorConditionMode.Less, 0.5f, target.GetInputParameter(data));
+                transition.AddCondition(AnimatorConditionMode.Less, 0.5f - data.angleHysteresis, target.GetInputParameter(data));
             }
 
             // Down -> Up
@@ -278,7 +285,7 @@ namespace Crux.AvatarSensing.Editor
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
-                transition.AddCondition(AnimatorConditionMode.Less, 0.5f, target.GetInputParameter(data));
+                transition.AddCondition(AnimatorConditionMode.Less, 0.5f - data.angleHysteresis, target.GetInputParameter(data));
             }
 
             // Up -> UpHold
@@ -311,7 +318,7 @@ namespace Crux.AvatarSensing.Editor
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
-                transition.AddCondition(AnimatorConditionMode.Greater, 0.5f, target.GetInputParameter(data));
+                transition.AddCondition(AnimatorConditionMode.Greater, 0.5f + data.angleHysteresis, target.GetInputParameter(data));
             }
 
             VRCAvatarParameterDriver driverDisabled =
