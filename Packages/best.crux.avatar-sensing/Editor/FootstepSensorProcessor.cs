@@ -58,7 +58,7 @@ namespace Crux.AvatarSensing.Editor
                 },
                 type = VRCExpressionsMenu.Control.ControlType.Toggle
             });
-            
+
             List<VRCExpressionsMenu> menus = new();
             hierarchy.Resolve(paramz, data.menuPrefix, menus);
 
@@ -130,7 +130,8 @@ namespace Crux.AvatarSensing.Editor
 
                 foreach (var valueData in data.values)
                 {
-                    controller.AddParameter(valueData.GetParameter(data, target), AnimatorControllerParameterType.Float);
+                    controller.AddParameter(valueData.GetParameter(data, target),
+                        AnimatorControllerParameterType.Float);
                 }
             }
         }
@@ -166,7 +167,7 @@ namespace Crux.AvatarSensing.Editor
 
                 transition.AddCondition(AnimatorConditionMode.IfNot, 0, data.enableParameter);
             }
-            
+
             // UpHold -> Disabled
             {
                 var transition = stateUpHold.AddTransition(stateDisabled);
@@ -199,7 +200,7 @@ namespace Crux.AvatarSensing.Editor
 
                 transition.AddCondition(AnimatorConditionMode.IfNot, 0, data.enableParameter);
             }
-            
+
             // Disabled -> UpHold
             {
                 var transition = stateDisabled.AddTransition(stateUpHold);
@@ -211,7 +212,7 @@ namespace Crux.AvatarSensing.Editor
                 transition.AddCondition(AnimatorConditionMode.If, 0, data.enableParameter);
                 transition.AddCondition(AnimatorConditionMode.Less, 0.5f, target.GetInputParameter(data));
             }
-            
+
             // Disabled -> DownHold
             {
                 var transition = stateDisabled.AddTransition(stateDownHold);
@@ -313,155 +314,55 @@ namespace Crux.AvatarSensing.Editor
                 transition.AddCondition(AnimatorConditionMode.Greater, 0.5f, target.GetInputParameter(data));
             }
 
-            VRCAvatarParameterDriver driverDisabled = null;
-            VRCAvatarParameterDriver driverDown = null;
-            VRCAvatarParameterDriver driverDownWait = null;
-            VRCAvatarParameterDriver driverUp = null;
-            VRCAvatarParameterDriver driverUpHold = null;
+            VRCAvatarParameterDriver driverDisabled =
+                stateDisabled.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
+            VRCAvatarParameterDriver driverDown = stateDown.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
+            VRCAvatarParameterDriver driverDownHold =
+                stateDownHold.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
+            VRCAvatarParameterDriver driverUp = stateUp.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
+            VRCAvatarParameterDriver driverUpHold = stateUpHold.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
 
             foreach (var evt in data.events.Where(evt =>
                          evt.eventKind == FootstepSensorDataV1.FootstepEvent.FootDown))
             {
-                if (!driverDisabled)
-                    driverDisabled = stateDisabled.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
-                if (!driverDown)
-                    driverDown = stateDown.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
-                if (!driverDownWait)
-                    driverDownWait = stateDownHold.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
-                if (!driverUp)
-                    driverUp = stateUp.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
+                string param = evt.GetParameter(data, target);
 
-                driverDisabled.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = evt.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 0f
-                });
-                
-                driverDown.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = evt.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 1f
-                });
-
-                driverDownWait.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = evt.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 0f
-                });
-
-                driverUp.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = evt.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 0f
-                });
+                UpdateDriver(driverDisabled, param, 0);
+                UpdateDriver(driverDown, param, 1);
+                UpdateDriver(driverDownHold, param, 0);
+                UpdateDriver(driverUp, param, 0);
             }
 
             foreach (var evt in data.events.Where(evt => evt.eventKind == FootstepSensorDataV1.FootstepEvent.FootUp))
             {
-                if (!driverDisabled)
-                    driverDisabled = stateDisabled.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
-                if (!driverUp)
-                    driverUp = stateUp.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
-                if (!driverUpHold)
-                    driverUpHold = stateUpHold.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
-                if (!driverDown)
-                    driverDown = stateDown.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
+                string param = evt.GetParameter(data, target);
 
-                driverDisabled.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = evt.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 0f
-                });
-
-                driverUp.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = evt.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 1f
-                });
-
-                driverUpHold.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = evt.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 0f
-                });
-
-                driverDown.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = evt.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 0f
-                });
+                UpdateDriver(driverDisabled, param, 0);
+                UpdateDriver(driverUp, param, 1);
+                UpdateDriver(driverUpHold, param, 0);
+                UpdateDriver(driverDown, param, 0);
             }
 
             foreach (var state in data.states.Where(state =>
                          state.stateKind == FootstepSensorDataV1.FootstepState.FootDownHold))
             {
-                if (!driverDisabled)
-                    driverDisabled = stateDisabled.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
-                if (!driverDown)
-                    driverDown = stateDown.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
-                if (!driverUp)
-                    driverUp = stateUp.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
+                string param = state.GetParameter(data, target);
 
-                driverDisabled.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = state.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 0f
-                });
-
-                driverDown.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = state.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 1f
-                });
-
-                driverUp.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = state.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 0f
-                });
+                UpdateDriver(driverDisabled, param, 0);
+                UpdateDriver(driverDown, param, 1);
+                UpdateDriver(driverDownHold, param, 1);
+                UpdateDriver(driverUp, param, 0);
             }
 
             foreach (var state in data.states.Where(state =>
                          state.stateKind == FootstepSensorDataV1.FootstepState.FootUpHold))
             {
-                if (!driverDisabled)
-                    driverDisabled = stateDisabled.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
-                if (!driverUp)
-                    driverUp = stateUp.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
-                if (!driverDown)
-                    driverDown = stateDown.AddStateMachineBehaviour<VRCAvatarParameterDriver>();
+                string param = state.GetParameter(data, target);
 
-                driverDisabled.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = state.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 0f
-                });
-
-                driverUp.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = state.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 1f
-                });
-
-                driverDown.parameters.Add(new VRC_AvatarParameterDriver.Parameter
-                {
-                    name = state.GetParameter(data, target),
-                    type = VRC_AvatarParameterDriver.ChangeType.Set,
-                    value = 0f
-                });
+                UpdateDriver(driverDisabled, param, 0);
+                UpdateDriver(driverUp, param, 1);
+                UpdateDriver(driverUpHold, param, 1);
+                UpdateDriver(driverDown, param, 0);
             }
 
             return layer;
@@ -524,7 +425,7 @@ namespace Crux.AvatarSensing.Editor
                             tree.children = children;
 
                             targetRoot.AddChild(tree);
-                            
+
                             break;
                         }
                         default:
@@ -542,6 +443,17 @@ namespace Crux.AvatarSensing.Editor
 
             AnimatorMath.SetOneParams(root);
             return layer;
+        }
+
+        private static void UpdateDriver(VRCAvatarParameterDriver driver, string parameter,
+            float value)
+        {
+            driver.parameters.Add(new VRC_AvatarParameterDriver.Parameter
+            {
+                name = parameter,
+                type = VRC_AvatarParameterDriver.ChangeType.Set,
+                value = value
+            });
         }
     }
 }
