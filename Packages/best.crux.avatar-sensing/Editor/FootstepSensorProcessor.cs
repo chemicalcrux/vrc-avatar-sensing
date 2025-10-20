@@ -160,6 +160,7 @@ namespace Crux.AvatarSensing.Editor
             {
                 var transition = stateUp.AddTransition(stateDisabled);
 
+                transition.name = "Deactivate";
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
@@ -170,6 +171,7 @@ namespace Crux.AvatarSensing.Editor
             {
                 var transition = stateUpHold.AddTransition(stateDisabled);
 
+                transition.name = "Deactivate";
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
@@ -180,6 +182,7 @@ namespace Crux.AvatarSensing.Editor
             {
                 var transition = stateDown.AddTransition(stateDisabled);
 
+                transition.name = "Deactivate";
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
@@ -190,6 +193,7 @@ namespace Crux.AvatarSensing.Editor
             {
                 var transition = stateDownHold.AddTransition(stateDisabled);
 
+                transition.name = "Deactivate";
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
@@ -200,6 +204,7 @@ namespace Crux.AvatarSensing.Editor
             {
                 var transition = stateDisabled.AddTransition(stateUpHold);
 
+                transition.name = "Activate Up";
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
@@ -211,6 +216,7 @@ namespace Crux.AvatarSensing.Editor
             {
                 var transition = stateDisabled.AddTransition(stateDownHold);
 
+                transition.name = "Activate Down";
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
@@ -222,6 +228,7 @@ namespace Crux.AvatarSensing.Editor
             {
                 var transition = stateUpHold.AddTransition(stateDown);
 
+                transition.name = "Step";
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
@@ -233,6 +240,7 @@ namespace Crux.AvatarSensing.Editor
             {
                 var transition = stateDown.AddTransition(stateDownHold);
 
+                transition.name = "Hold";
                 transition.duration = 0f;
 
                 if (data.eventHoldTime > 0)
@@ -254,6 +262,7 @@ namespace Crux.AvatarSensing.Editor
             {
                 var transition = stateDownHold.AddTransition(stateUp);
 
+                transition.name = "Raise";
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
@@ -264,6 +273,7 @@ namespace Crux.AvatarSensing.Editor
             {
                 var transition = stateDown.AddTransition(stateUp);
 
+                transition.name = "Raise Early";
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
@@ -274,6 +284,7 @@ namespace Crux.AvatarSensing.Editor
             {
                 var transition = stateUp.AddTransition(stateUpHold);
 
+                transition.name = "Hold";
                 transition.duration = 0f;
 
                 if (data.eventHoldTime > 0)
@@ -295,6 +306,7 @@ namespace Crux.AvatarSensing.Editor
             {
                 var transition = stateUp.AddTransition(stateDown);
 
+                transition.name = "Step Early";
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 

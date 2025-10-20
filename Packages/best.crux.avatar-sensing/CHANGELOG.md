@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - A menu for footstep settings
 
+### Changed
+
+- Footstep transitions now have names
+
 ### Fixed
 
 - Footstep sensors were off by default and had no controls to turn them on
