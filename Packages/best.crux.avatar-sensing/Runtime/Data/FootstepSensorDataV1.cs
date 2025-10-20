@@ -30,7 +30,7 @@ namespace Crux.AvatarSensing.Runtime.Data
                 return GetPhysboneParameter(data) + "_Angle";
             }
         }
-        
+
         internal enum FootstepEvent
         {
             FootDown,
@@ -85,7 +85,6 @@ namespace Crux.AvatarSensing.Runtime.Data
             }
         }
 
-
         internal enum FootstepValue
         {
             GroundProximity
@@ -115,10 +114,10 @@ namespace Crux.AvatarSensing.Runtime.Data
         public bool standalone;
 
         public string enableParameter = "Control/Active";
-        
+
         public string outputPrefix = "Shared/Footsteps/";
         public string menuPrefix = "Config/Footsteps/";
-        
+
         public VRCPhysBoneCollider floorCollider;
 
         public float eventHoldTime;

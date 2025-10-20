@@ -262,6 +262,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 104694460}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: f81e8172c337a714894d6fdbd0900d8d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1727676424}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f81e8172c337a714894d6fdbd0900d8d,
         type: 3}
@@ -275,10 +279,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1409495115}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f81e8172c337a714894d6fdbd0900d8d,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1409495120}
     - targetCorrespondingSourceObject: {fileID: 6057286732890248245, guid: f81e8172c337a714894d6fdbd0900d8d,
         type: 3}
       insertIndex: -1
@@ -1568,50 +1568,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 62257685}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1409495120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 62257688}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddfb3cbf81f643308b4e00cc7389d76f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data:
-    rid: 3602565622720888832
-  references:
-    version: 2
-    RefIds:
-    - rid: 3602565622720888832
-      type: {class: FootstepSensorDataV1, ns: Crux.AvatarSensing.Runtime.Data, asm: Crux.AvatarSensing.Runtime}
-      data:
-        standalone: 1
-        enableParameter: Control/Active
-        outputPrefix: Shared/Footstep/
-        menuPrefix: Config/Footsteps/
-        floorCollider: {fileID: 1542207673}
-        eventHoldTime: 0
-        targets:
-        - transform: {fileID: 825515169}
-          identifier: Left Foot
-        - transform: {fileID: 619601260}
-          identifier: Right Foot
-        events:
-        - eventKind: 0
-          parameterName: 
-        - eventKind: 1
-          parameterName: 
-        states:
-        - stateKind: 0
-          parameterName: 
-        - stateKind: 1
-          parameterName: 
-        values:
-        - valueKind: 0
-          parameterName: 
 --- !u!1 &1542207671
 GameObject:
   m_ObjectHideFlags: 0
@@ -1664,6 +1620,83 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 0, z: 0, w: 1}
   bonesAsSpheres: 0
+--- !u!1 &1727676423
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1727676424}
+  - component: {fileID: 1727676425}
+  m_Layer: 0
+  m_Name: Footstep Sensor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1727676424
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727676423}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1409495118}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1727676425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1727676423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddfb3cbf81f643308b4e00cc7389d76f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data:
+    rid: 3602565622720888832
+  references:
+    version: 2
+    RefIds:
+    - rid: 3602565622720888832
+      type: {class: FootstepSensorDataV1, ns: Crux.AvatarSensing.Runtime.Data, asm: Crux.AvatarSensing.Runtime}
+      data:
+        standalone: 1
+        enableParameter: Control/Active
+        outputPrefix: Shared/Footstep/
+        menuPrefix: Config/Footsteps/
+        floorCollider: {fileID: 1542207673}
+        eventHoldTime: 0
+        angleHysteresis: 0.05
+        targets:
+        - transform: {fileID: 825515169}
+          identifier: Left Foot
+        - transform: {fileID: 619601260}
+          identifier: Right Foot
+        events:
+        - eventKind: 0
+          parameterName: 
+        - eventKind: 1
+          parameterName: 
+        states:
+        - stateKind: 0
+          parameterName: 
+        - stateKind: 1
+          parameterName: 
+        values:
+        - valueKind: 0
+          parameterName: 
 --- !u!4 &1798613149 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6162258519646862899, guid: f81e8172c337a714894d6fdbd0900d8d,

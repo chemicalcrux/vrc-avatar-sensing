@@ -11,7 +11,7 @@ namespace Crux.AvatarSensing.Runtime.Data
         public bool standalone = true;
         public Transform targetTransform;
         public string parameterName;
-        
+
         public override RotationSensorData Upgrade()
         {
             return this;
