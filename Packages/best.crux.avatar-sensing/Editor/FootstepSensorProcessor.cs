@@ -158,12 +158,34 @@ namespace Crux.AvatarSensing.Editor
                 stateMachine = machine
             };
 
+            var stateEntry1 = machine.AddState("Entry Delay 1");
+            var stateEntry2 = machine.AddState("Entry Delay 2");
             var stateDisabled = machine.AddState("Disabled");
             var stateUp = machine.AddState("Up");
             var stateUpHold = machine.AddState("UpHold");
             var stateDown = machine.AddState("Down");
             var stateDownHold = machine.AddState("DownHold");
 
+            // Entry 1 -> Entry 2
+            {
+                var transition = stateEntry1.AddTransition(stateEntry2);
+
+                transition.name = "Wait One Frame";
+                transition.hasExitTime = false;
+                transition.duration = 0f;
+
+                transition.AddCondition(AnimatorConditionMode.Greater, 0, "Constant/One");
+            }
+            // Entry 2 -> Disabled
+            {
+                var transition = stateEntry2.AddTransition(stateDisabled);
+
+                transition.name = "Wait One Frame";
+                transition.hasExitTime = false;
+                transition.duration = 0f;
+
+                transition.AddCondition(AnimatorConditionMode.Greater, 0, "Constant/One");
+            }
             // Up -> Disabled
             {
                 var transition = stateUp.AddTransition(stateDisabled);
