@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Renamed "angleHysteresis" to "margin", since that makes a lot more sense
+  - This is a breaking change, but it doesn't really matter right now.
+  - A 1.x.y release would migrate to FootstepSensorDataV2 to prevent breakage.
+
 ### Fixed
 
 - Footsteps no longer trigger instantly upon loading in

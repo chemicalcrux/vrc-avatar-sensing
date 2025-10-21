@@ -263,7 +263,7 @@ namespace Crux.AvatarSensing.Editor
                 transition.duration = 0f;
 
                 transition.AddCondition(AnimatorConditionMode.If, 0, data.enableParameter);
-                transition.AddCondition(AnimatorConditionMode.Greater, 0.5f + data.angleHysteresis, target.GetInputParameter(data));
+                transition.AddCondition(AnimatorConditionMode.Greater, 0.5f + data.margin, target.GetInputParameter(data));
             }
 
             // Down -> DownHold
@@ -296,7 +296,7 @@ namespace Crux.AvatarSensing.Editor
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
-                transition.AddCondition(AnimatorConditionMode.Less, 0.5f - data.angleHysteresis, target.GetInputParameter(data));
+                transition.AddCondition(AnimatorConditionMode.Less, 0.5f - data.margin, target.GetInputParameter(data));
             }
 
             // Down -> Up
@@ -307,7 +307,7 @@ namespace Crux.AvatarSensing.Editor
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
-                transition.AddCondition(AnimatorConditionMode.Less, 0.5f - data.angleHysteresis, target.GetInputParameter(data));
+                transition.AddCondition(AnimatorConditionMode.Less, 0.5f - data.margin, target.GetInputParameter(data));
             }
 
             // Up -> UpHold
@@ -340,7 +340,7 @@ namespace Crux.AvatarSensing.Editor
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
-                transition.AddCondition(AnimatorConditionMode.Greater, 0.5f + data.angleHysteresis, target.GetInputParameter(data));
+                transition.AddCondition(AnimatorConditionMode.Greater, 0.5f + data.margin, target.GetInputParameter(data));
             }
 
             VRCAvatarParameterDriver driverDisabled =

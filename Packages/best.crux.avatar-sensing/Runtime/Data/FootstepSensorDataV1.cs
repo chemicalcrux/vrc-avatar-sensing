@@ -122,7 +122,7 @@ namespace Crux.AvatarSensing.Runtime.Data
 
         public float eventHoldTime;
 
-        public float angleHysteresis = 0.05f;
+        public float margin = 0.05f;
 
         public List<FootstepTarget> targets = new();
         public List<FootstepEventEntry> events = new();
