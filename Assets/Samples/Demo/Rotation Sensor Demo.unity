@@ -1673,9 +1673,10 @@ MonoBehaviour:
       type: {class: FootstepSensorDataV1, ns: Crux.AvatarSensing.Runtime.Data, asm: Crux.AvatarSensing.Runtime}
       data:
         standalone: 1
+        createMenu: 1
+        menuPrefix: Config/Footsteps
         enableParameter: Control/Active
         outputPrefix: Shared/Footstep/
-        menuPrefix: Config/Footsteps/
         floorCollider: {fileID: 1542207673}
         eventHoldTime: 0
         margin: 0.05

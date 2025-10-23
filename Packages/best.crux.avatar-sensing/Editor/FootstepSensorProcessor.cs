@@ -42,28 +42,31 @@ namespace Crux.AvatarSensing.Editor
             };
 
             foreach (var target in data.targets)
-                controller.AddLayer(CreateEventLayer(context, data, target));
+                controller.AddLayer(CreateEventLayer(data, target));
 
-            controller.AddLayer(CreateValueLayer(context, data));
+            controller.AddLayer(CreateValueLayer(data));
 
             context.receiver.AddController(controller);
             context.receiver.AddParameters(paramz);
 
-            hierarchy.leaves.Add(new VRCExpressionsMenu.Control
+            if (data.createMenu)
             {
-                name = "Active",
-                parameter = new VRCExpressionsMenu.Control.Parameter
+                hierarchy.leaves.Add(new VRCExpressionsMenu.Control
                 {
-                    name = "Control/Active"
-                },
-                type = VRCExpressionsMenu.Control.ControlType.Toggle
-            });
+                    name = "Active",
+                    parameter = new VRCExpressionsMenu.Control.Parameter
+                    {
+                        name = data.enableParameter
+                    },
+                    type = VRCExpressionsMenu.Control.ControlType.Toggle
+                });
 
-            List<VRCExpressionsMenu> menus = new();
-            hierarchy.Resolve(paramz, data.menuPrefix, menus);
+                List<VRCExpressionsMenu> menus = new();
+                hierarchy.Resolve(paramz, "", menus);
 
-            foreach (var menu in menus)
-                context.receiver.AddMenu(menu, "");
+                foreach (var menu in menus)
+                    context.receiver.AddMenu(menu, data.menuPrefix);
+            }
 
             return true;
         }
@@ -143,7 +146,7 @@ namespace Crux.AvatarSensing.Editor
             }
         }
 
-        private static AnimatorControllerLayer CreateEventLayer(Context context, FootstepSensorDataV1 data,
+        private static AnimatorControllerLayer CreateEventLayer(FootstepSensorDataV1 data,
             FootstepSensorDataV1.FootstepTarget target)
         {
             var machine = new AnimatorStateMachine
@@ -263,7 +266,8 @@ namespace Crux.AvatarSensing.Editor
                 transition.duration = 0f;
 
                 transition.AddCondition(AnimatorConditionMode.If, 0, data.enableParameter);
-                transition.AddCondition(AnimatorConditionMode.Greater, 0.5f + data.margin, target.GetInputParameter(data));
+                transition.AddCondition(AnimatorConditionMode.Greater, 0.5f + data.margin,
+                    target.GetInputParameter(data));
             }
 
             // Down -> DownHold
@@ -340,7 +344,8 @@ namespace Crux.AvatarSensing.Editor
                 transition.hasExitTime = false;
                 transition.duration = 0f;
 
-                transition.AddCondition(AnimatorConditionMode.Greater, 0.5f + data.margin, target.GetInputParameter(data));
+                transition.AddCondition(AnimatorConditionMode.Greater, 0.5f + data.margin,
+                    target.GetInputParameter(data));
             }
 
             VRCAvatarParameterDriver driverDisabled =
@@ -397,7 +402,7 @@ namespace Crux.AvatarSensing.Editor
             return layer;
         }
 
-        private static AnimatorControllerLayer CreateValueLayer(Context context, FootstepSensorDataV1 data)
+        private static AnimatorControllerLayer CreateValueLayer(FootstepSensorDataV1 data)
         {
             var machine = new AnimatorStateMachine
             {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Crux.Core.Runtime;
+using Crux.Core.Runtime.Attributes;
 using Crux.Core.Runtime.Upgrades;
 using UnityEngine;
 using VRC.SDK3.Dynamics.PhysBone.Components;
@@ -114,10 +115,16 @@ namespace Crux.AvatarSensing.Runtime.Data
 
         public bool standalone;
 
+        [Space] public bool createMenu = true;
+        
+        [BeginRevealArea(nameof(createMenu), true)]
+        public string menuPrefix = "Config/Footsteps/";
+        [EndRevealArea]
+        
+        [Space]
         public string enableParameter = "Control/Active";
 
         public string outputPrefix = "Shared/Footsteps/";
-        public string menuPrefix = "Config/Footsteps/";
 
         public VRCPhysBoneCollider floorCollider;
 

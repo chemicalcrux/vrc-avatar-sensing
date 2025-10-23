@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **BREAKING**: Replace List with DecoratedList in FootstepSensorDataV1
   - This allows tooltips to be attached
   - Again, migrating to V2 is not really necessary yet
+- Creating a menu for the footstep sensor is now optional
 
 ## [0.1.2] - 2025-10-21
 

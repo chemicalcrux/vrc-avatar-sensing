@@ -7,7 +7,7 @@
       "version": "3.9.0"
     },
     "best.crux.core": {
-      "version": "0.8.1"
+      "version": "0.8.2"
     },
     "vrchat.blackstartx.gesture-manager": {
       "version": "3.9.6"
@@ -32,7 +32,7 @@
       "dependencies": {}
     },
     "best.crux.core": {
-      "version": "0.8.1",
+      "version": "0.8.2",
       "dependencies": {}
     },
     "vrchat.blackstartx.gesture-manager": {
