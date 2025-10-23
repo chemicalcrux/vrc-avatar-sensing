@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Crux.Core.Runtime;
 using Crux.Core.Runtime.Upgrades;
 using UnityEngine;
 using VRC.SDK3.Dynamics.PhysBone.Components;
@@ -124,10 +125,10 @@ namespace Crux.AvatarSensing.Runtime.Data
 
         public float margin = 0.05f;
 
-        public List<FootstepTarget> targets = new();
-        public List<FootstepEventEntry> events = new();
-        public List<FootstepStateEntry> states = new();
-        public List<FootstepValueEntry> values = new();
+        public DecoratedList<FootstepTarget> targets = new();
+        public DecoratedList<FootstepEventEntry> events = new();
+        public DecoratedList<FootstepStateEntry> states = new();
+        public DecoratedList<FootstepValueEntry> values = new();
 
         public override FootstepSensorData Upgrade()
         {

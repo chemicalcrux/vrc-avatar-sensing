@@ -1678,25 +1678,29 @@ MonoBehaviour:
         menuPrefix: Config/Footsteps/
         floorCollider: {fileID: 1542207673}
         eventHoldTime: 0
-        angleHysteresis: 0.05
+        margin: 0.05
         targets:
-        - transform: {fileID: 825515169}
-          identifier: Left Foot
-        - transform: {fileID: 619601260}
-          identifier: Right Foot
+          list:
+          - transform: {fileID: 825515169}
+            identifier: Left Foot
+          - transform: {fileID: 619601260}
+            identifier: Right Foot
         events:
-        - eventKind: 0
-          parameterName: 
-        - eventKind: 1
-          parameterName: 
+          list:
+          - eventKind: 0
+            parameterName: 
+          - eventKind: 1
+            parameterName: 
         states:
-        - stateKind: 0
-          parameterName: 
-        - stateKind: 1
-          parameterName: 
+          list:
+          - stateKind: 0
+            parameterName: 
+          - stateKind: 1
+            parameterName: 
         values:
-        - valueKind: 0
-          parameterName: 
+          list:
+          - valueKind: 0
+            parameterName: 
 --- !u!4 &1798613149 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6162258519646862899, guid: f81e8172c337a714894d6fdbd0900d8d,
