@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Crux.Core.Runtime;
 using Crux.Core.Runtime.Attributes;
 using Crux.Core.Runtime.Upgrades;
+using UnityEditor;
 using UnityEngine;
 using VRC.SDK3.Dynamics.PhysBone.Components;
 
@@ -15,15 +16,32 @@ namespace Crux.AvatarSensing.Runtime.Data
         [Serializable]
         internal class FootstepTarget
         {
-            public Transform transform;
             public string identifier;
+            public Transform transform;
+
+            public string GetIdentifier()
+            {
+                if (string.IsNullOrEmpty(identifier))
+                {
+                    if (transform != null)
+                    {
+                        return transform.name;
+                    }
+                }
+                else
+                {
+                    return identifier;
+                }
+
+                return "MISSING";
+            }
 
             public string GetPhysboneParameter(FootstepSensorDataV1 data)
             {
                 string result = "Input/Physbone/";
 
-                result += identifier;
-
+                result += GetIdentifier();
+                
                 return result;
             }
 
@@ -49,7 +67,7 @@ namespace Crux.AvatarSensing.Runtime.Data
             {
                 string result = data.outputPrefix;
 
-                result += target.identifier;
+                result += target.GetIdentifier();
 
                 if (string.IsNullOrEmpty(parameterName))
                     result += "-" + eventKind;
@@ -76,7 +94,7 @@ namespace Crux.AvatarSensing.Runtime.Data
             {
                 string result = data.outputPrefix;
 
-                result += target.identifier;
+                result += target.GetIdentifier();
 
                 if (string.IsNullOrEmpty(parameterName))
                     result += "-" + stateKind;
@@ -102,7 +120,7 @@ namespace Crux.AvatarSensing.Runtime.Data
             {
                 string result = data.outputPrefix;
 
-                result += target.identifier;
+                result += target.GetIdentifier();
 
                 if (string.IsNullOrEmpty(parameterName))
                     result += "-" + valueKind;

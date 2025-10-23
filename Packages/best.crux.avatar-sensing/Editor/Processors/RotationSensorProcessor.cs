@@ -7,7 +7,7 @@ using VRC.Dynamics;
 using VRC.SDK3.Dynamics.Constraint.Components;
 using VRC.SDK3.Dynamics.PhysBone.Components;
 
-namespace Crux.AvatarSensing.Editor
+namespace Crux.AvatarSensing.Editor.Processors
 {
     public static class RotationSensorProcessor
     {

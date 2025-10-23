@@ -5,7 +5,7 @@ using Crux.ProceduralController.Editor.Receivers;
 using UnityEngine;
 using VRC.SDKBase.Editor.BuildPipeline;
 
-namespace Crux.AvatarSensing.Editor
+namespace Crux.AvatarSensing.Editor.Processors
 {
     public class RotationSensorProcessorStandalone : IVRCSDKPreprocessAvatarCallback
     {

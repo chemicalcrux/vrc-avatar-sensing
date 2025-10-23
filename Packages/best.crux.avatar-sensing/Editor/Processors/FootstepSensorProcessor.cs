@@ -13,7 +13,7 @@ using VRC.SDK3.Dynamics.Constraint.Components;
 using VRC.SDK3.Dynamics.PhysBone.Components;
 using VRC.SDKBase;
 
-namespace Crux.AvatarSensing.Editor
+namespace Crux.AvatarSensing.Editor.Processors
 {
     public static class FootstepSensorProcessor
     {

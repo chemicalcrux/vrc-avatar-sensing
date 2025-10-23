@@ -4,20 +4,20 @@ using Crux.ProceduralController.Editor;
 using Crux.ProceduralController.Editor.Processors;
 using JetBrains.Annotations;
 
-namespace Crux.AvatarSensing.Editor
+namespace Crux.AvatarSensing.Editor.Processors
 {
     [UsedImplicitly]
-    public class FootstepSensorProcessorProcedural : Processor<FootstepSensorDefinition>
+    public class RotationSensorProcessorProcedural : Processor<RotationSensorDefinition>
     {
         public override void Process(Context context)
         {
-            if (!model.data.TryUpgradeTo(out FootstepSensorDataV1 data))
+            if (!model.data.TryUpgradeTo(out RotationSensorDataV1 data))
                 return;
 
             if (data.standalone)
                 return;
 
-            FootstepSensorProcessor.Process(context, model);
+            RotationSensorProcessor.Process(context, model);
         }
     }
 }

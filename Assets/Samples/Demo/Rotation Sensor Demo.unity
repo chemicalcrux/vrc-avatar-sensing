@@ -1682,10 +1682,10 @@ MonoBehaviour:
         margin: 0.05
         targets:
           list:
-          - transform: {fileID: 825515169}
-            identifier: Left Foot
-          - transform: {fileID: 619601260}
-            identifier: Right Foot
+          - identifier: Left Foot
+            transform: {fileID: 825515169}
+          - identifier: Right Foot
+            transform: {fileID: 619601260}
         events:
           list:
           - eventKind: 0
