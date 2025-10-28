@@ -1680,7 +1680,7 @@ MonoBehaviour:
         createFloorCollider: 1
         floorCollider: {fileID: 1542207673}
         floorColliderHeight: 0
-        floorColliderHeightAdjustment: 0
+        floorColliderHeightAdjustment: 1
         floorColliderAdjustRange: 0.1
         eventHoldTime: 0
         margin: 0.05

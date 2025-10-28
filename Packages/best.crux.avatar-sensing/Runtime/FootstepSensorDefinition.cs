@@ -22,25 +22,40 @@ namespace Crux.AvatarSensing.Runtime
             if (!data.TryUpgradeTo(out FootstepSensorDataV1 latest))
                 return;
 
-            foreach (var target in latest.targets)
-            {
-                Gizmos.DrawLine(target.transform.position, target.transform.position + Vector3.down * 0.3f);
-            }
-
             if (latest.createFloorCollider)
             {
-                Gizmos.color = Color.gray;
-                
+                Gizmos.color = new Color(0.5f, 0.5f, 0.5f, 0.4f);
+
                 Gizmos.DrawCube(transform.root.position + Vector3.up * latest.floorColliderHeight,
                     new Vector3(1, 0, 1));
 
-                Gizmos.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
-                
-                Gizmos.DrawCube(transform.root.position + Vector3.up * (latest.floorColliderHeight + latest.floorColliderAdjustRange),
-                    new Vector3(1, 0, 1));
-                Gizmos.DrawCube(transform.root.position + Vector3.up * (latest.floorColliderHeight - latest.floorColliderAdjustRange),
-                    new Vector3(1, 0, 1));
+                if (latest.floorColliderHeightAdjustment)
+                {
+                    Gizmos.color = new Color(0.5f, 0.5f, 0.5f, 0.2f);
 
+                    Gizmos.DrawCube(
+                        transform.root.position +
+                        Vector3.up * (latest.floorColliderHeight + latest.floorColliderAdjustRange),
+                        new Vector3(1, 0, 1));
+                    Gizmos.DrawCube(
+                        transform.root.position +
+                        Vector3.up * (latest.floorColliderHeight - latest.floorColliderAdjustRange),
+                        new Vector3(1, 0, 1));
+                }
+            }
+
+            Gizmos.color = Color.white;
+            
+            foreach (var target in latest.targets)
+            {
+                Handles.Label(target.transform.position, target.GetIdentifier(), style: new GUIStyle()
+                {
+                    normal = new GUIStyleState()
+                    {
+                        textColor = Color.white
+                    }
+                });
+                Gizmos.DrawLine(target.transform.position, target.transform.position + Vector3.down * 0.3f);
             }
         }
     }
