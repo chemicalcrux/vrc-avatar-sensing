@@ -129,7 +129,8 @@ namespace Crux.AvatarSensing.Runtime.Data
             }
         }
 
-        public bool standalone;
+        [TooltipInline("Disable this if you are using this sensor as part of a Procedural Controller")]
+        public bool standalone = true;
 
         [Space] public bool createMenu = true;
 
@@ -140,21 +141,32 @@ namespace Crux.AvatarSensing.Runtime.Data
 
         public string outputPrefix = "Shared/Footsteps/";
 
+        [TooltipInline("You can use your own floor collider, or you have the sensor generate one for you.")]
         public bool createFloorCollider;
 
         [BeginRevealArea(nameof(createFloorCollider), false)]
         public VRCPhysBoneCollider floorCollider;
 
-        [EndRevealArea] [BeginRevealArea(nameof(createFloorCollider), true)]
+        [TooltipInline("How far above the origin of your avatar the collider will be.")]
+        [EndRevealArea]
+        [BeginRevealArea(nameof(createFloorCollider), true)]
         public float floorColliderHeight;
 
+        [TooltipInline("Adds a control to your menu to move the floor up and down.")]
         public bool floorColliderHeightAdjustment;
-        
-        [BeginRevealArea(nameof(floorColliderHeightAdjustment), true)]
 
-        [Range(0, 1)] public float floorColliderAdjustRange = 0.1f;
-        [EndRevealArea] [EndRevealArea] public float eventHoldTime;
+        [BeginRevealArea(nameof(floorColliderHeightAdjustment), true)] [Range(0, 1)]
+        public float floorColliderAdjustRange = 0.1f;
 
+        [EndRevealArea]
+        [EndRevealArea]
+        [TooltipInline(
+            "How long the foot-up and foot-down events will stay true. If set to zero, they will stay true for exactly one frame")]
+        public float eventHoldTime;
+
+        [TooltipInline(
+            "How much the physbone angle has to go above or below the threshold before going from 'foot down' to 'foot up' or vice-versa. " +
+            "This helps to prevent 'flapping', where the physbone is wiggling back and forth across the threshold and causing unwanted events.")]
         public float margin = 0.05f;
 
         public DecoratedList<FootstepTarget> targets = new();
