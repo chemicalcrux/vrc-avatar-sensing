@@ -4,7 +4,6 @@ using System.Text;
 using Crux.AvatarSensing.Editor.ExtensionMethods;
 using Crux.AvatarSensing.Runtime;
 using Crux.AvatarSensing.Runtime.Data;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Crux.AvatarSensing.Editor.Controls

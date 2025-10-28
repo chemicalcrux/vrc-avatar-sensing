@@ -1,6 +1,4 @@
-using Crux.AvatarSensing.Runtime.Data;
 using Crux.Core.Editor.PropertyDrawers;
-using UnityEditor;
 
 namespace Crux.AvatarSensing.Editor.PropertyDrawers
 {

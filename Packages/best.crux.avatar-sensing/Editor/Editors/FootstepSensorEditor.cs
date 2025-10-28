@@ -11,7 +11,7 @@ namespace Crux.AvatarSensing.Editor.Editors
     {
         public override VisualElement CreateInspectorGUI()
         {
-            var target = (FootstepSensorDefinition)serializedObject.targetObject;
+            var targetObject = (FootstepSensorDefinition)serializedObject.targetObject;
             
             var root = new VisualElement();
             var list = new FootstepSensorParameterList();
@@ -19,7 +19,7 @@ namespace Crux.AvatarSensing.Editor.Editors
             root.Add(new PropertyField(serializedObject.FindProperty(nameof(FootstepSensorDefinition.data))));
             root.Add(list);
 
-            list.Connect(target);
+            list.Connect(targetObject);
 
             return root;
         }
