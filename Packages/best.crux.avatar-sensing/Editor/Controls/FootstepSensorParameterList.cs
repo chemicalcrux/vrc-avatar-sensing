@@ -29,7 +29,6 @@ namespace Crux.AvatarSensing.Editor.Controls
 
         void Refresh()
         {
-            Debug.Log("Refreshing");
             if (!definition.data.TryUpgradeTo(out FootstepSensorDataV1 data))
                 return;
 
