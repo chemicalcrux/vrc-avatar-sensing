@@ -34,7 +34,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Shared/Footstep/Left Foot-FootDown
+    m_ConditionEvent: Shared/Footsteps/LeftFoot-FootDown
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5449975290098880021}
@@ -87,7 +87,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Shared/Footstep/Left Foot-FootDownHold
+    m_ConditionEvent: Shared/Footsteps/LeftFoot-FootDownHold
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1469368107082464567}
@@ -152,19 +152,19 @@ AnimatorController:
     m_DefaultFloat: 1
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: Shared/Footstep/Left Foot-FootDown
+    m_Controller: {fileID: 0}
+  - m_Name: Shared/Footsteps/LeftFoot-FootDown
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: Shared/Footstep/Left Foot-FootDownHold
+    m_Controller: {fileID: 0}
+  - m_Name: Shared/Footsteps/LeftFoot-FootDownHold
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Footstep Event
@@ -330,7 +330,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Shared/Footstep/Left Foot-FootDownHold
+    m_ConditionEvent: Shared/Footsteps/LeftFoot-FootDownHold
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 4715369042117042263}

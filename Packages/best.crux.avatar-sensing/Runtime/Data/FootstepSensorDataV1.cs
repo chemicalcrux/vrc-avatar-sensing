@@ -41,7 +41,7 @@ namespace Crux.AvatarSensing.Runtime.Data
                 string result = "Input/Physbone/";
 
                 result += GetIdentifier();
-                
+
                 return result;
             }
 
@@ -134,19 +134,28 @@ namespace Crux.AvatarSensing.Runtime.Data
         public bool standalone;
 
         [Space] public bool createMenu = true;
-        
+
         [BeginRevealArea(nameof(createMenu), true)]
         public string menuPrefix = "Config/Footsteps/";
-        [EndRevealArea]
-        
-        [Space]
-        public string enableParameter = "Control/Active";
+
+        [EndRevealArea] [Space] public string enableParameter = "Control/Active";
 
         public string outputPrefix = "Shared/Footsteps/";
 
+        public bool createFloorCollider;
+
+        [BeginRevealArea(nameof(createFloorCollider), false)]
         public VRCPhysBoneCollider floorCollider;
 
-        public float eventHoldTime;
+        [EndRevealArea] [BeginRevealArea(nameof(createFloorCollider), true)]
+        public float floorColliderHeight;
+
+        public bool floorColliderHeightAdjustment;
+        
+        [BeginRevealArea(nameof(floorColliderHeightAdjustment), true)]
+
+        [Range(0, 1)] public float floorColliderAdjustRange = 0.1f;
+        [EndRevealArea] [EndRevealArea] public float eventHoldTime;
 
         public float margin = 0.05f;
 

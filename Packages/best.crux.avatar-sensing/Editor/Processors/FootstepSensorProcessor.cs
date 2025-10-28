@@ -17,6 +17,13 @@ namespace Crux.AvatarSensing.Editor.Processors
 {
     public static class FootstepSensorProcessor
     {
+        private class ProcessorState
+        {
+            public VRCPhysBoneCollider floorCollider;
+        }
+
+        private const string HeightAdjustParameter = "Control/Floor Collider Height";
+
         public static bool Process(Context context, FootstepSensorDefinition definition)
         {
             if (!definition.data.TryUpgradeTo(out FootstepSensorDataV1 data))
@@ -25,24 +32,21 @@ namespace Crux.AvatarSensing.Editor.Processors
             var controller = new AnimatorController();
             var paramz = ScriptableObject.CreateInstance<VRCExpressionParameters>();
             var hierarchy = new MenuHierarchy();
+            var state = new ProcessorState();
 
-            CreateSensors(context, data);
-            AddParameters(controller, data);
+            List<VRCExpressionParameters.Parameter> paramzList = new List<VRCExpressionParameters.Parameter>();
 
-            paramz.parameters = new[]
-            {
-                new VRCExpressionParameters.Parameter
-                {
-                    name = "Control/Active",
-                    defaultValue = 1f,
-                    networkSynced = true,
-                    saved = false,
-                    valueType = VRCExpressionParameters.ValueType.Bool
-                }
-            };
+            InitializeState(context, data, state);
+            CreateSensors(context, data, state);
+            AddParameters(controller, data, paramzList);
+
+            paramz.parameters = paramzList.ToArray();
 
             foreach (var target in data.targets)
                 controller.AddLayer(CreateEventLayer(data, target));
+
+            if (data.createFloorCollider && data.floorColliderHeightAdjustment)
+                controller.AddLayer(CreateHeightAdjustLayer(context, data, state));
 
             controller.AddLayer(CreateValueLayer(data));
 
@@ -61,6 +65,22 @@ namespace Crux.AvatarSensing.Editor.Processors
                     type = VRCExpressionsMenu.Control.ControlType.Toggle
                 });
 
+                if (data.createFloorCollider && data.floorColliderHeightAdjustment)
+                {
+                    hierarchy.leaves.Add(new VRCExpressionsMenu.Control
+                    {
+                        name = "Floor Height",
+                        type = VRCExpressionsMenu.Control.ControlType.RadialPuppet,
+                        subParameters = new[]
+                        {
+                            new VRCExpressionsMenu.Control.Parameter
+                            {
+                                name = HeightAdjustParameter
+                            }
+                        }
+                    });
+                }
+
                 List<VRCExpressionsMenu> menus = new();
                 hierarchy.Resolve(paramz, "", menus);
 
@@ -71,7 +91,24 @@ namespace Crux.AvatarSensing.Editor.Processors
             return true;
         }
 
-        private static void CreateSensors(Context context, FootstepSensorDataV1 data)
+        private static void InitializeState(Context context, FootstepSensorDataV1 data, ProcessorState state)
+        {
+            if (data.createFloorCollider)
+            {
+                GameObject colliderHolder = new GameObject("Footstep Floor Collider");
+                colliderHolder.transform.SetParent(context.avatarRoot.transform, false);
+                state.floorCollider = colliderHolder.AddComponent<VRCPhysBoneCollider>();
+                state.floorCollider.shapeType = VRCPhysBoneColliderBase.ShapeType.Plane;
+
+                colliderHolder.transform.localPosition = Vector3.up * data.floorColliderHeight;
+            }
+            else
+            {
+                state.floorCollider = data.floorCollider;
+            }
+        }
+
+        private static void CreateSensors(Context context, FootstepSensorDataV1 data, ProcessorState state)
         {
             foreach (var target in data.targets)
             {
@@ -104,7 +141,7 @@ namespace Crux.AvatarSensing.Editor.Processors
 
                 physbone.radius = 0.03f;
 
-                physbone.colliders.Add(data.floorCollider);
+                physbone.colliders.Add(state.floorCollider);
 
                 physbone.immobileType = VRCPhysBoneBase.ImmobileType.AllMotion;
                 physbone.immobile = 1f;
@@ -114,9 +151,33 @@ namespace Crux.AvatarSensing.Editor.Processors
             }
         }
 
-        private static void AddParameters(AnimatorController controller, FootstepSensorDataV1 data)
+        private static void AddParameters(AnimatorController controller, FootstepSensorDataV1 data,
+            List<VRCExpressionParameters.Parameter> paramzList)
         {
+            paramzList.Add(new VRCExpressionParameters.Parameter
+            {
+                name = "Control/Active",
+                defaultValue = 1f,
+                networkSynced = true,
+                saved = false,
+                valueType = VRCExpressionParameters.ValueType.Bool
+            });
+
             controller.AddParameter(data.enableParameter, AnimatorControllerParameterType.Bool);
+
+            if (data.createFloorCollider && data.floorColliderHeightAdjustment)
+            {
+                paramzList.Add(new VRCExpressionParameters.Parameter
+                {
+                    name = HeightAdjustParameter,
+                    defaultValue = 0.5f,
+                    networkSynced = true,
+                    saved = true,
+                    valueType = VRCExpressionParameters.ValueType.Float
+                });
+
+                controller.AddParameter(HeightAdjustParameter, AnimatorControllerParameterType.Float);
+            }
 
             controller.AddParameter("Constant/One", AnimatorControllerParameterType.Float);
 
@@ -143,6 +204,11 @@ namespace Crux.AvatarSensing.Editor.Processors
                     controller.AddParameter(valueData.GetParameter(data, target),
                         AnimatorControllerParameterType.Float);
                 }
+            }
+
+            if (data.createFloorCollider && data.floorColliderHeightAdjustment)
+            {
+                controller.AddParameter("Control/Collider Height", AnimatorControllerParameterType.Float);
             }
         }
 
@@ -479,6 +545,63 @@ namespace Crux.AvatarSensing.Editor.Processors
             return layer;
         }
 
+        private static AnimatorControllerLayer CreateHeightAdjustLayer(Context context, FootstepSensorDataV1 data,
+            ProcessorState processorState)
+        {
+            var machine = new AnimatorStateMachine
+            {
+                name = "Height Adjust"
+            };
+
+            var layer = new AnimatorControllerLayer
+            {
+                name = machine.name,
+                defaultWeight = 1f,
+                stateMachine = machine
+            };
+
+            var state = machine.AddState("Blend");
+
+            var root = new BlendTree
+            {
+                name = "Root",
+                blendParameter = HeightAdjustParameter,
+                blendType = BlendTreeType.Simple1D
+            };
+
+            string path = GetPath(context.avatarRoot.transform, processorState.floorCollider.transform);
+            Type type = typeof(Transform);
+            string property = "m_LocalPosition.y";
+
+            AnimationCurve lowerCurve =
+                AnimationCurve.Constant(0, 1, data.floorColliderHeight - data.floorColliderAdjustRange);
+
+            var lowerClip = new AnimationClip
+            {
+                name = "Height Adjust - Low"
+            };
+
+            lowerClip.SetCurve(path, type, property, lowerCurve);
+
+            root.AddChild(lowerClip);
+
+            AnimationCurve upperCurve =
+                AnimationCurve.Constant(0, 1, data.floorColliderHeight + data.floorColliderAdjustRange);
+
+            var upperClip = new AnimationClip
+            {
+                name = "Height Adjust - High"
+            };
+
+            upperClip.SetCurve(path, type, property, upperCurve);
+
+            root.AddChild(upperClip);
+
+            state.motion = root;
+
+            return layer;
+        }
+
         private static void UpdateDriver(VRCAvatarParameterDriver driver, string parameter,
             float value)
         {
@@ -488,6 +611,20 @@ namespace Crux.AvatarSensing.Editor.Processors
                 type = VRC_AvatarParameterDriver.ChangeType.Set,
                 value = value
             });
+        }
+
+        private static string GetPath(Transform root, Transform target)
+        {
+            string path = target.name;
+            target = target.parent;
+
+            while (target != root)
+            {
+                path = target.name + "/" + path;
+                target = target.parent;
+            }
+
+            return path;
         }
     }
 }

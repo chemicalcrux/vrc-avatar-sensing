@@ -1676,15 +1676,19 @@ MonoBehaviour:
         createMenu: 1
         menuPrefix: Config/Footsteps
         enableParameter: Control/Active
-        outputPrefix: Shared/Footstep/
+        outputPrefix: Shared/Footsteps/
+        createFloorCollider: 1
         floorCollider: {fileID: 1542207673}
+        floorColliderHeight: 0
+        floorColliderHeightAdjustment: 0
+        floorColliderAdjustRange: 0.1
         eventHoldTime: 0
         margin: 0.05
         targets:
           list:
-          - identifier: Left Foot
+          - identifier: 
             transform: {fileID: 825515169}
-          - identifier: Right Foot
+          - identifier: 
             transform: {fileID: 619601260}
         events:
           list:
