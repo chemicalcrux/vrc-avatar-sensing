@@ -13,7 +13,8 @@
   "vpmDependencies": {
     "com.vrchat.avatars" : ">=3.9.0 <3.10.0",
     "com.vrcfury.vrcfury" : ">=1.1258.0 <2.0.0",
-    "best.crux.core" : ">=0.9.0 < 0.10.0"
+    "best.crux.core" : ">=0.9.0 < 0.10.0",
+    "best.crux.procedural-controller" : ">=0.2.2 <0.3.0"
   },
   "changelogUrl": "https://github.com/chemicalcrux/vrc-avatar-sensing/blob/main/Packages/best.crux.avatar-sensing/CHANGELOG.md",
   "documentationUrl": "https://chemicalcrux.github.io/vrc-docs/docs/code/best.crux.avatar-sensing/"
