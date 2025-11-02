@@ -17,6 +17,7 @@ namespace Crux.AvatarSensing.Runtime
             data = new FootstepSensorDataV1();
         }
 
+#if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
             if (!data.TryUpgradeTo(out FootstepSensorDataV1 latest))
@@ -58,5 +59,6 @@ namespace Crux.AvatarSensing.Runtime
                 Gizmos.DrawLine(target.transform.position, target.transform.position + Vector3.down * 0.3f);
             }
         }
+#endif
     }
 }
