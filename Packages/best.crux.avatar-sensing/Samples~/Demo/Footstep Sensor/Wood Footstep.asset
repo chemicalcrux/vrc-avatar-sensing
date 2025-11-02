@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a564ea5ad51c466eb6310c96dac4e3f6, type: 3}
+  m_Name: Wood Footstep
+  m_EditorClassIdentifier: 
+  definition:
+    path: Wood
+    icon: {fileID: 0}
+    surround: 0
+    volumeRange: {x: 1, y: 1}
+    pitchRange: {x: 1, y: 1}
+    clips:
+    - {fileID: 8300000, guid: ffe15137b84c1438db62ca9f2ab8be9a, type: 3}
+    - {fileID: 8300000, guid: a1764c9505d434229a70ffd621c45be8, type: 3}
+    - {fileID: 8300000, guid: eb3fde85eccc24d3ba643d57d26a5566, type: 3}
+    - {fileID: 8300000, guid: f49769088c9474dc18bb0ff83536f019, type: 3}
+    - {fileID: 8300000, guid: 9578974c5463a4718958cac2ad22410e, type: 3}

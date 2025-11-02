@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c08c0c7e808c418eb01633abe1910d02, type: 3}
+  m_Name: Procedural Demo - Full Controller
+  m_EditorClassIdentifier: 
+  data:
+    rid: 3602565618264965125
+  references:
+    version: 2
+    RefIds:
+    - rid: 3602565618264965125
+      type: {class: FullControllerModelDataV1, ns: Crux.ProceduralController.Runtime.Models,
+        asm: Crux.ProceduralController.Runtime}
+      data:
+        controllers:
+          list:
+          - {fileID: 9100000, guid: 908d5126ee8804400a62542dd52b9911, type: 2}
+        menus:
+          list: []
+        parameters:
+          list: []
+        globalParameters:
+          list: []
