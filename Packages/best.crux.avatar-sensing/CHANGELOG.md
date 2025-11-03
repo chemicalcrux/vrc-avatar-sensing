@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Contact-based footstep detection
 
+### Changed
+
+- FootstepSensorDefinition now tells you how many physbones/contact receivers it's going to add
+
 ## [0.2.0] - 2025-11-02
 
 ### Added

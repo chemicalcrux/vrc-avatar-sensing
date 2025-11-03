@@ -48,6 +48,17 @@ namespace Crux.AvatarSensing.Editor.Controls
 
             results.Sort();
 
+            if (data.mode == FootstepSensorDataV1.Mode.Physbones)
+            {
+                builder.Append("Physbone count: " + data.targets.list.Count);
+            }
+            else if (data.mode == FootstepSensorDataV1.Mode.Contacts)
+            {
+                builder.Append("Contact count: " + data.targets.list.Count * 2);
+            }
+
+            builder.Append("\n");
+
             builder.Append("Parameter count: " + results.Count);
             builder.Append("\n\n");
             
