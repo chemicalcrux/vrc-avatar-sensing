@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using com.vrcfury.api;
 using Crux.AvatarSensing.Runtime;
 using Crux.AvatarSensing.Runtime.Data;
 using Crux.ProceduralController.Editor;
@@ -10,8 +11,11 @@ using VRC.Dynamics;
 using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Avatars.ScriptableObjects;
 using VRC.SDK3.Dynamics.Constraint.Components;
+using VRC.SDK3.Dynamics.Contact.Components;
 using VRC.SDK3.Dynamics.PhysBone.Components;
 using VRC.SDKBase;
+
+#pragma warning disable CS8524 // The switch expression does not handle some values of its input type (it is not exhaustive) involving an unnamed enum value.
 
 namespace Crux.AvatarSensing.Editor.Processors
 {
@@ -19,7 +23,8 @@ namespace Crux.AvatarSensing.Editor.Processors
     {
         private class ProcessorState
         {
-            public VRCPhysBoneCollider floorCollider;
+            public VRCPhysBoneCollider physboneFloor;
+            public GameObject contactFloorPivot;
         }
 
         private const string HeightAdjustParameter = "Control/Floor Collider Height";
@@ -45,8 +50,21 @@ namespace Crux.AvatarSensing.Editor.Processors
             foreach (var target in data.targets)
                 controller.AddLayer(CreateEventLayer(data, target));
 
-            if (data.createFloorCollider && data.floorColliderHeightAdjustment)
-                controller.AddLayer(CreateHeightAdjustLayer(context, data, state));
+            switch (data.mode)
+            {
+                case FootstepSensorDataV1.Mode.Physbones:
+                {
+                    if (data.createFloorCollider && data.floorColliderHeightAdjustment)
+                        controller.AddLayer(CreateHeightAdjustLayer(context, data, state));
+                    break;
+                }
+                case FootstepSensorDataV1.Mode.Contacts:
+                {
+                    if (data.contactFloorHeightAdjustment)
+                        controller.AddLayer(CreateHeightAdjustLayer(context, data, state));
+                    break;
+                }
+            }
 
             controller.AddLayer(CreateValueLayer(data));
 
@@ -97,18 +115,26 @@ namespace Crux.AvatarSensing.Editor.Processors
             {
                 GameObject colliderHolder = new GameObject("Footstep Floor Collider");
                 colliderHolder.transform.SetParent(context.avatarRoot.transform, false);
-                state.floorCollider = colliderHolder.AddComponent<VRCPhysBoneCollider>();
-                state.floorCollider.shapeType = VRCPhysBoneColliderBase.ShapeType.Plane;
+                state.physboneFloor = colliderHolder.AddComponent<VRCPhysBoneCollider>();
+                state.physboneFloor.shapeType = VRCPhysBoneColliderBase.ShapeType.Plane;
 
                 colliderHolder.transform.localPosition = Vector3.up * data.floorColliderHeight;
             }
             else
             {
-                state.floorCollider = data.floorCollider;
+                state.physboneFloor = data.floorCollider;
             }
         }
 
         private static void CreateSensors(Context context, FootstepSensorDataV1 data, ProcessorState state)
+        {
+            if (data.mode == FootstepSensorDataV1.Mode.Physbones)
+                CreatePhysboneSensors(context, data, state);
+            else if (data.mode == FootstepSensorDataV1.Mode.Contacts)
+                CreateContactSensors(context, data, state);
+        }
+
+        private static void CreatePhysboneSensors(Context context, FootstepSensorDataV1 data, ProcessorState state)
         {
             foreach (var target in data.targets)
             {
@@ -127,7 +153,7 @@ namespace Crux.AvatarSensing.Editor.Processors
 
                 var physbone = holder.transform.gameObject.AddComponent<VRCPhysBone>();
 
-                physbone.parameter = target.GetPhysboneParameter(data);
+                physbone.parameter = target.GetBaseParameter(data);
 
                 physbone.version = VRCPhysBoneBase.Version.Version_1_1;
                 physbone.integrationType = VRCPhysBoneBase.IntegrationType.Advanced;
@@ -141,13 +167,98 @@ namespace Crux.AvatarSensing.Editor.Processors
 
                 physbone.radius = 0.03f;
 
-                physbone.colliders.Add(state.floorCollider);
+                physbone.colliders.Add(state.physboneFloor);
 
                 physbone.immobileType = VRCPhysBoneBase.ImmobileType.AllMotion;
                 physbone.immobile = 1f;
 
                 physbone.endpointPosition = new Vector3(0.001f, -0.3f, 0.001f);
                 physbone.isAnimated = true;
+            }
+        }
+
+        private static void CreateContactSensors(Context context, FootstepSensorDataV1 data, ProcessorState state)
+        {
+            var floorRoot = new GameObject("Footstep Floor Root");
+            floorRoot.transform.SetParent(context.targetObject.transform, false);
+
+            var floorConstraint = floorRoot.AddComponent<VRCPositionConstraint>();
+
+            floorConstraint.Sources.Add(new VRCConstraintSource
+                {
+                    SourceTransform = context.avatarRoot.transform,
+                    Weight = 1f
+                }
+            );
+
+            floorConstraint.ZeroConstraint();
+
+            var floorPivot = new GameObject("Footstep Floor Pivot");
+            floorPivot.transform.SetParent(floorRoot.transform, false);
+            floorPivot.transform.localPosition = Vector3.up * data.contactFloorHeight;
+
+            state.contactFloorPivot = floorPivot;
+
+            foreach (var target in data.targets)
+            {
+                var senderHolder = new GameObject($"Footstep Sender - {target.GetIdentifier()}");
+
+                senderHolder.transform.SetParent(context.targetObject.transform);
+
+                var senderConstraint = senderHolder.AddComponent<VRCPositionConstraint>();
+
+                senderConstraint.Sources.Add(new VRCConstraintSource
+                {
+                    SourceTransform = target.transform,
+                    Weight = 1f
+                });
+
+                senderConstraint.ZeroConstraint();
+
+                var sender = senderHolder.AddComponent<VRCContactSender>();
+
+                string collisionTag = $"Footstep - {target.GetIdentifier()}";
+
+                sender.collisionTags = new()
+                {
+                    collisionTag
+                };
+
+                sender.radius = 0.2f;
+                sender.position = sender.radius / 2f * Vector3.up;
+                
+                var receiverHolder = new GameObject($"Footstep Receiver - {target.GetIdentifier()}");
+
+                receiverHolder.transform.SetParent(floorPivot.transform, false);
+
+                var receiverConstraint = receiverHolder.AddComponent<VRCPositionConstraint>();
+
+                receiverConstraint.Sources.Add(new VRCConstraintSource
+                {
+                    SourceTransform = target.transform,
+                    Weight = 1f
+                });
+
+                receiverConstraint.AffectsPositionY = false;
+
+                receiverConstraint.ZeroConstraint();
+
+                var receiver = receiverHolder.AddComponent<VRCContactReceiver>();
+
+                receiver.collisionTags = new()
+                {
+                    collisionTag
+                };
+
+                receiver.parameter = target.GetBaseParameter(data);
+                receiver.allowOthers = false;
+
+                receiver.shapeType = ContactBase.ShapeType.Capsule;
+                receiver.radius = 0.2f;
+                receiver.height = 3f;
+                receiver.position = Vector3.down * (receiver.height / 2f - receiver.radius);
+                receiver.collisionValue = 1f;
+                receiver.receiverType = ContactReceiver.ReceiverType.Proximity;
             }
         }
 
@@ -569,12 +680,36 @@ namespace Crux.AvatarSensing.Editor.Processors
                 blendType = BlendTreeType.Simple1D
             };
 
-            string path = GetPath(context.avatarRoot.transform, processorState.floorCollider.transform);
+            Transform target;
+            float center;
+            float lower;
+            float upper;
+
+            if (data.mode == FootstepSensorDataV1.Mode.Physbones)
+            {
+                target = processorState.physboneFloor.transform;
+                center = data.floorColliderHeight;
+                lower = center - data.floorColliderAdjustRange;
+                upper = center + data.floorColliderAdjustRange;
+            }
+            else if (data.mode == FootstepSensorDataV1.Mode.Contacts)
+            {
+                target = processorState.contactFloorPivot.transform;
+                center = data.contactFloorHeight;
+                lower = center - data.contactFloorHeightRange;
+                upper = center + data.contactFloorHeightRange;
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("Invalid mode: " + data.mode);
+            }
+
+            string path = GetPath(context.avatarRoot.transform, target);
             Type type = typeof(Transform);
             string property = "m_LocalPosition.y";
 
             AnimationCurve lowerCurve =
-                AnimationCurve.Constant(0, 1, data.floorColliderHeight - data.floorColliderAdjustRange);
+                AnimationCurve.Constant(0, 1, lower);
 
             var lowerClip = new AnimationClip
             {
@@ -586,7 +721,7 @@ namespace Crux.AvatarSensing.Editor.Processors
             root.AddChild(lowerClip);
 
             AnimationCurve upperCurve =
-                AnimationCurve.Constant(0, 1, data.floorColliderHeight + data.floorColliderAdjustRange);
+                AnimationCurve.Constant(0, 1, upper);
 
             var upperClip = new AnimationClip
             {

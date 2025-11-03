@@ -4,6 +4,7 @@ using Crux.Core.Runtime.Attributes;
 using Crux.Core.Runtime.Upgrades;
 using UnityEngine;
 using VRC.SDK3.Dynamics.PhysBone.Components;
+#pragma warning disable CS8524 // The switch expression does not handle some values of its input type (it is not exhaustive) involving an unnamed enum value.
 
 namespace Crux.AvatarSensing.Runtime.Data
 {
@@ -11,6 +12,12 @@ namespace Crux.AvatarSensing.Runtime.Data
     [UpgradableVersion(1)]
     internal class FootstepSensorDataV1 : FootstepSensorData
     {
+        internal enum Mode
+        {
+            Physbones,
+            Contacts
+        }
+        
         [Serializable]
         internal class FootstepTarget
         {
@@ -34,9 +41,9 @@ namespace Crux.AvatarSensing.Runtime.Data
                 return "MISSING";
             }
 
-            public string GetPhysboneParameter(FootstepSensorDataV1 data)
+            public string GetBaseParameter(FootstepSensorDataV1 data)
             {
-                string result = "Input/Physbone/";
+                string result = "Input/Sensor/";
 
                 result += GetIdentifier();
 
@@ -45,7 +52,11 @@ namespace Crux.AvatarSensing.Runtime.Data
 
             public string GetInputParameter(FootstepSensorDataV1 data)
             {
-                return GetPhysboneParameter(data) + "_Angle";
+                return data.mode switch
+                {
+                    Mode.Physbones => GetBaseParameter(data) + "_Angle",
+                    Mode.Contacts => GetBaseParameter(data)
+                };
             }
         }
 
@@ -141,6 +152,9 @@ namespace Crux.AvatarSensing.Runtime.Data
 
         public string outputPrefix = "Shared/Footsteps/";
 
+        public Mode mode;
+        
+        [BeginEnumRevealArea(nameof(mode), typeof(Mode), BeginEnumRevealAreaAttribute.EnumFlagKind.Off, Mode.Physbones)]
         [TooltipInline("You can use your own floor collider, or you have the sensor generate one for you.")]
         public bool createFloorCollider;
 
@@ -160,13 +174,25 @@ namespace Crux.AvatarSensing.Runtime.Data
 
         [EndRevealArea]
         [EndRevealArea]
+        [EndRevealArea]
+        [BeginEnumRevealArea(nameof(mode), typeof(Mode), BeginEnumRevealAreaAttribute.EnumFlagKind.Off, Mode.Contacts)]
+
+        [TooltipInline("The contact receivers will be placed at this height.")]
+        public float contactFloorHeight;
+
+        [TooltipInline("Adds a control to your menu to move the floor up and down.")]
+        public bool contactFloorHeightAdjustment;
+
+        public float contactFloorHeightRange;
+        
+        [EndRevealArea]
         [TooltipInline(
             "How long the foot-up and foot-down events will stay true. If set to zero, they will stay true for exactly one frame")]
         public float eventHoldTime;
 
         [TooltipInline(
-            "How much the physbone angle has to go above or below the threshold before going from 'foot down' to 'foot up' or vice-versa. " +
-            "This helps to prevent 'flapping', where the physbone is wiggling back and forth across the threshold and causing unwanted events.")]
+            "How much the physbone angle or contact overlap has to go above or below the threshold before going from 'foot down' to 'foot up' or vice-versa. " +
+            "This helps to prevent 'flapping', where the sensor is wiggling back and forth across the threshold.")]
         public float margin = 0.05f;
 
         public DecoratedList<FootstepTarget> targets = new();

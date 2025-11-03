@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028301, g: 0.22571309, b: 0.30692127, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -519,8 +519,8 @@ MonoBehaviour:
             version: 1
             fileID: 0
             guid: 
-            id: ac90d8156da0c4415b7817758b8c0c36|Assets/Samples/Demo/Footstep Sensor/Footstep
-              Sensor - Controller.controller
+            id: ac90d8156da0c4415b7817758b8c0c36|Assets/Sample Templates/Demo/Footstep
+              Sensor/Footstep Sensor - Controller.controller
             objRef: {fileID: 9100000, guid: ac90d8156da0c4415b7817758b8c0c36, type: 2}
           type: 5
         menus: []
@@ -708,7 +708,8 @@ MonoBehaviour:
             version: 1
             fileID: 0
             guid: 
-            id: 908d5126ee8804400a62542dd52b9911|Assets/Samples/Demo/Demo - Controller.controller
+            id: 908d5126ee8804400a62542dd52b9911|Assets/Sample Templates/Demo/Demo
+              - Controller.controller
             objRef: {fileID: 9100000, guid: 908d5126ee8804400a62542dd52b9911, type: 2}
           type: 5
         menus: []
@@ -1677,13 +1678,17 @@ MonoBehaviour:
         menuPrefix: Config/Footsteps
         enableParameter: Control/Active
         outputPrefix: Shared/Footsteps/
+        mode: 1
         createFloorCollider: 1
         floorCollider: {fileID: 1542207673}
         floorColliderHeight: 0.08
         floorColliderHeightAdjustment: 1
         floorColliderAdjustRange: 0.1
+        contactFloorHeight: 0
+        contactFloorHeightAdjustment: 1
+        contactFloorHeightRange: 0.25
         eventHoldTime: 0
-        margin: 0.05
+        margin: 0.135
         targets:
           list:
           - identifier: 
