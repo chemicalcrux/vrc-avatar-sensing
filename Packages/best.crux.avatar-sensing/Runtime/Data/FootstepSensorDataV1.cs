@@ -143,12 +143,12 @@ namespace Crux.AvatarSensing.Runtime.Data
         [TooltipInline("Disable this if you are using this sensor as part of a Procedural Controller")]
         public bool standalone = true;
 
-        [Space] public bool createMenu = true;
+        public bool createMenu = true;
 
         [BeginRevealArea(nameof(createMenu), true)]
         public string menuPrefix = "Config/Footsteps/";
 
-        [EndRevealArea] [Space] public string enableParameter = "Control/Active";
+        [EndRevealArea] public string enableParameter = "Control/Active";
 
         public string outputPrefix = "Shared/Footsteps/";
 
