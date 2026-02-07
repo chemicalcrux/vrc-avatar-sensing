@@ -226,7 +226,7 @@ namespace Crux.AvatarSensing.Editor.Processors
 
                 sender.radius = 0.2f;
                 sender.position = sender.radius / 2f * Vector3.up;
-                
+
                 var receiverHolder = new GameObject($"Footstep Receiver - {target.GetIdentifier()}");
 
                 receiverHolder.transform.SetParent(floorPivot.transform, false);
@@ -276,18 +276,44 @@ namespace Crux.AvatarSensing.Editor.Processors
 
             controller.AddParameter(data.enableParameter, AnimatorControllerParameterType.Bool);
 
-            if (data.createFloorCollider && data.floorColliderHeightAdjustment)
+            switch (data.mode)
             {
-                paramzList.Add(new VRCExpressionParameters.Parameter
+                case FootstepSensorDataV1.Mode.Physbones:
                 {
-                    name = HeightAdjustParameter,
-                    defaultValue = 0.5f,
-                    networkSynced = true,
-                    saved = true,
-                    valueType = VRCExpressionParameters.ValueType.Float
-                });
+                    if (data.createFloorCollider && data.floorColliderHeightAdjustment)
+                    {
+                        paramzList.Add(new VRCExpressionParameters.Parameter
+                        {
+                            name = HeightAdjustParameter,
+                            defaultValue = 0.5f,
+                            networkSynced = true,
+                            saved = true,
+                            valueType = VRCExpressionParameters.ValueType.Float
+                        });
 
-                controller.AddParameter(HeightAdjustParameter, AnimatorControllerParameterType.Float);
+                        controller.AddParameter(HeightAdjustParameter, AnimatorControllerParameterType.Float);
+                    }
+
+                    break;
+                }
+                case FootstepSensorDataV1.Mode.Contacts:
+                {
+                    if (data.contactFloorHeightAdjustment)
+                    {
+                        paramzList.Add(new VRCExpressionParameters.Parameter
+                        {
+                            name = HeightAdjustParameter,
+                            defaultValue = 0.5f,
+                            networkSynced = true,
+                            saved = true,
+                            valueType = VRCExpressionParameters.ValueType.Float
+                        });
+
+                        controller.AddParameter(HeightAdjustParameter, AnimatorControllerParameterType.Float);
+                    }
+
+                    break;
+                }
             }
 
             controller.AddParameter("Constant/One", AnimatorControllerParameterType.Float);
