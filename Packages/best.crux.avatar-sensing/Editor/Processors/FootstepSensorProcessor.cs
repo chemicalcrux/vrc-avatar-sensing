@@ -83,7 +83,14 @@ namespace Crux.AvatarSensing.Editor.Processors
                     type = VRCExpressionsMenu.Control.ControlType.Toggle
                 });
 
-                if (data.createFloorCollider && data.floorColliderHeightAdjustment)
+                bool heightAdjust = data.mode switch
+                {
+                    FootstepSensorDataV1.Mode.Physbones => data.createFloorCollider &&
+                                                           data.floorColliderHeightAdjustment,
+                    FootstepSensorDataV1.Mode.Contacts => data.contactFloorHeightAdjustment
+                };
+
+                if (heightAdjust)
                 {
                     hierarchy.leaves.Add(new VRCExpressionsMenu.Control
                     {
