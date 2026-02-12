@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- The "enable" control can now be disabled
+- The "enable" parameter can now be made global
+  - Together, these allow for another system to turn footstep detection on and off.
+
 ## [0.2.4] - 2026-02-07
 
 ### Fixed

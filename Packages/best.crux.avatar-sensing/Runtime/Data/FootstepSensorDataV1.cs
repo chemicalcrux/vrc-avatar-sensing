@@ -148,6 +148,9 @@ namespace Crux.AvatarSensing.Runtime.Data
         [BeginRevealArea(nameof(createMenu), true)]
         public string menuPrefix = "Config/Footsteps/";
 
+        public bool createEnableControl = true;        
+        public bool globalEnableParameter = false;        
+
         [EndRevealArea] public string enableParameter = "Control/Active";
 
         public string outputPrefix = "Shared/Footsteps/";

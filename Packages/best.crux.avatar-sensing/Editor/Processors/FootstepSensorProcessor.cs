@@ -71,17 +71,25 @@ namespace Crux.AvatarSensing.Editor.Processors
             context.receiver.AddController(controller);
             context.receiver.AddParameters(paramz);
 
+            if (data.globalEnableParameter)
+            {
+                context.receiver.AddGlobalParameter(data.enableParameter);
+            }
+
             if (data.createMenu)
             {
-                hierarchy.leaves.Add(new VRCExpressionsMenu.Control
+                if (data.createEnableControl)
                 {
-                    name = "Active",
-                    parameter = new VRCExpressionsMenu.Control.Parameter
+                    hierarchy.leaves.Add(new VRCExpressionsMenu.Control
                     {
-                        name = data.enableParameter
-                    },
-                    type = VRCExpressionsMenu.Control.ControlType.Toggle
-                });
+                        name = "Active",
+                        parameter = new VRCExpressionsMenu.Control.Parameter
+                        {
+                            name = data.enableParameter
+                        },
+                        type = VRCExpressionsMenu.Control.ControlType.Toggle
+                    });
+                }
 
                 bool heightAdjust = data.mode switch
                 {
