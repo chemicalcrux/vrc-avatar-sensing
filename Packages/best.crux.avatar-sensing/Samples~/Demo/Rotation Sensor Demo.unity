@@ -1676,6 +1676,8 @@ MonoBehaviour:
         standalone: 1
         createMenu: 1
         menuPrefix: Config/Footsteps
+        createEnableControl: 1
+        globalEnableParameter: 0
         enableParameter: Control/Active
         outputPrefix: Shared/Footsteps/
         mode: 1
